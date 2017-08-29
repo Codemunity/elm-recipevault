@@ -1,7 +1,6 @@
 require('./main.css')
-var logoPath = require('./logo.svg')
-var Elm = require('./App.elm')
+var Elm = require('./RecipeVault.elm')
 
 var root = document.getElementById('root')
 
-Elm.App.embed(root, logoPath)
+Elm.RecipeVault.embed(root)
