@@ -4,6 +4,8 @@ import Login.Types exposing (..)
 import Login.Rest exposing (..)
 import Http exposing (..)
 import Navigation
+import Error.Types exposing (..)
+import Error.Rest exposing (..)
 
 
 init : ( Model, Cmd Msg )
@@ -18,17 +20,17 @@ update msg model =
         NewPasswordInput newPassword ->
             ( { model | passwordInput = newPassword }, Cmd.none )
         LoginFormSubmit ->
-            let
-                credentials =
-                    Credentials model.emailInput model.passwordInput
-            in
-                ( model, loginRequest "https://<workspacename>-<username>.c9users.io/api" credentials )
+          let
+              credentials =
+                  Credentials model.emailInput model.passwordInput
+          in
+              ( { model | errorMessage = Nothing }, loginRequest "https://recipevault-miguelcodemunity.c9users.io/api" credentials )
         LoginRequestResult (Ok auth) ->
             ( model, Navigation.newUrl "#recipe-search" )
         LoginRequestResult (Err error) ->
             case error of
                 Http.BadStatus response ->
-                    ( { model | errorMessage = Just "Bad request." }, Cmd.none )
+                    ( { model | errorMessage = Just (messageForResponse response) }, Cmd.none )
                 _ ->
                     ( { model | errorMessage = Just "Unknown error." }, Cmd.none )
         NavigateToSignUp ->

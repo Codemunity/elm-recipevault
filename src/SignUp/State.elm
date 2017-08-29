@@ -4,6 +4,8 @@ import SignUp.Types exposing (..)
 import SignUp.Rest exposing (..)
 import Http exposing (..)
 import Navigation
+import Error.Types exposing (..)
+import Error.Rest exposing (..)
 
 
 init : ( Model, Cmd Msg )
@@ -43,13 +45,13 @@ update msg model =
                 form =
                     Form model.emailInput model.nameInput model.passwordInput model.passwordConfirmationInput
             in
-                ( model, signUpRequest "https://recipevault-miguelcodemunity.c9users.io/api" form )
+                ( { model | errorMessages = [] }, signUpRequest "https://recipevault-miguelcodemunity.c9users.io/api" form )
         SignUpRequestResult (Ok auth) ->
             ( model, Navigation.newUrl "#recipe-search" )
         SignUpRequestResult (Err error) ->
             case error of
                 Http.BadStatus response ->
-                    ( { model | errorMessages = [ "Bad request." ] }, Cmd.none )
+                    ( { model | errorMessages = [ messageForResponse response ] }, Cmd.none )
                 _ ->
                     ( { model | errorMessages = [ "Unknown error." ] }, Cmd.none )
         NavigateToLogin ->
