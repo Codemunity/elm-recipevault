@@ -1,15 +1,16 @@
 module RecipeVault exposing (main)
 
-import Html
 import App.Types exposing (..)
-import App.View exposing (view)
-import App.State exposing (init, update, subscriptions)
+import App.View exposing (..)
+import App.State exposing (..)
+import Navigation exposing (Location)
+
 
 main : Program Never Model Msg
 main =
-    Html.program
-        { view = view
-        , init = init
-        , update = update
-        , subscriptions = subscriptions
-        }
+  Navigation.program OnLocationChange
+    { view = view
+    , init = init
+    , update = update
+    , subscriptions = subscriptions
+    }
