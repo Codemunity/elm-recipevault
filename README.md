@@ -1,3 +1,5 @@
+This repo contains the code for our ["Building Single-Page Applications in Elm"](http://bit.ly/2qkHFAs), you'll find one branch per chapter that requires coding.
+
 This project is bootstrapped with [Create Elm App](https://github.com/halfzebra/create-elm-app).
 
 Below you will find some information on how to perform basic tasks.  
