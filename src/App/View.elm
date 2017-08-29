@@ -21,3 +21,5 @@ page model =
       Html.map LoginMsg (Login.view model.loginModel)
     SignUpRoute ->
       Html.map SignUpMsg (SignUp.view model.signUpModel)
+    RecipeSearchRoute ->
+      div [] [ text "Recipe Search" ]
