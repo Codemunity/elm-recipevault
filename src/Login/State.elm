@@ -31,6 +31,8 @@ update msg model =
                     ( { model | errorMessage = Just "Bad request." }, Cmd.none )
                 _ ->
                     ( { model | errorMessage = Just "Unknown error." }, Cmd.none )
+        NavigateToSignUp ->
+            ( model, Navigation.newUrl "#signup" )
 
 subscriptions : Model -> Sub Msg
 subscriptions = \_ -> Sub.none

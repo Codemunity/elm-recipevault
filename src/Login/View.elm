@@ -13,4 +13,5 @@ view model =
         , div [] [ input [ type_ "text", placeholder "Email", onInput NewEmailInput, value model.emailInput ] [] ]
         , div [] [ input [ type_ "password", placeholder "Password", onInput NewPasswordInput, value model.passwordInput ] [] ]
         , div [] [ button [ onClick LoginFormSubmit ] [ text "Login" ] ]
+        , div [] [ a [ onClick NavigateToSignUp ] [ text "Don't have an account? Click here to sign up!" ] ]
         ]

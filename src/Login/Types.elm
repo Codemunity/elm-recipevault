@@ -19,3 +19,4 @@ type Msg
     | NewPasswordInput String
     | LoginFormSubmit
     | LoginRequestResult (Result Http.Error Auth)
+    | NavigateToSignUp
