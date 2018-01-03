@@ -2,6 +2,7 @@ module App.View exposing (..)
 
 import App.Types exposing (..)
 import Html exposing (..)
+import Html.Events exposing (..)
 import Login.View as Login
 import Login.Types
 import SignUp.View as SignUp
@@ -22,4 +23,7 @@ page model =
     SignUpRoute ->
       Html.map SignUpMsg (SignUp.view model.signUpModel)
     RecipeSearchRoute ->
-      div [] [ text "Recipe Search" ]
+      div [] 
+        [ div [] [ text "Recipe Search" ]
+        , div [] [ a [ onClick Logout ] [ text "Logout" ] ]
+        ]

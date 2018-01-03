@@ -6,9 +6,9 @@ import App.State exposing (..)
 import Navigation exposing (Location)
 
 
-main : Program Never Model Msg
+main : Program Flags Model Msg
 main =
-  Navigation.program OnLocationChange
+  Navigation.programWithFlags OnLocationChange
     { view = view
     , init = init
     , update = update

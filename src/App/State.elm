@@ -6,8 +6,8 @@ import Navigation exposing (Location)
 import Login.State
 import SignUp.State
 
-init : Location -> ( Model, Cmd Msg )
-init location =
+init : Flags -> Location -> ( Model, Cmd Msg )
+init flags location =
     let
         initialRoute =
             parseLocation location
@@ -15,13 +15,25 @@ init location =
           Login.State.init
         ( signUpModel, signUpCmd ) =
           SignUp.State.init
+        authCmd =
+          case (initialRoute, flags.auth) of
+            (LoginRoute, Just _) ->
+              Navigation.modifyUrl "#recipe-search"
+            (SignUpRoute, Just _) ->
+              Navigation.modifyUrl "#recipe-search"
+            (RecipeSearchRoute, Nothing) ->
+              Navigation.modifyUrl "#login"
+            _ ->
+              Cmd.none
     in
         ( { loginModel = loginModel
           , signUpModel = signUpModel
           , currentRoute = initialRoute
+          , flags = flags
           }
         , Cmd.batch [ Cmd.map LoginMsg loginCmd
                     , Cmd.map SignUpMsg signUpCmd
+                    , authCmd
                     ]
         )
 
@@ -41,7 +53,9 @@ update msg model =
       in
           ( { model | signUpModel = signUpModel }, Cmd.map SignUpMsg signUpCmd )
     OnLocationChange location ->
-          init location
+      init model.flags location
+    Logout ->
+      ( model, Navigation.modifyUrl "#login" )
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
