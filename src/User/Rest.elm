@@ -17,5 +17,5 @@ decodeUser : Json.Decode.Decoder User
 decodeUser =
   decode User
     |> required "email" Json.Decode.string
-    |> required "name" Json.Decode.string
     |> required "password" Json.Decode.string
+    |> required "name" Json.Decode.string
