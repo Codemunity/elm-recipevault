@@ -23,7 +23,15 @@ page model =
     SignUpRoute ->
       Html.map SignUpMsg (SignUp.view model.signUpModel)
     RecipeSearchRoute ->
-      div [] 
-        [ div [] [ text "Recipe Search" ]
-        , div [] [ a [ onClick Logout ] [ text "Logout" ] ]
-        ]
+      case model.flags.auth of
+        Just auth ->
+          div [] 
+            [ div [] [ h1 [] [ text "Recipe Search" ] ]
+            , div [] [ text ( "Welcome " ++ auth.user.name ++ "!" ) ]
+            , div [] [ a [ onClick Logout ] [ text "Logout" ] ]
+            ]
+        Nothing ->
+          div [] 
+            [ div [] [ h1 [] [ text "Recipe Search" ] ]
+            , div [] [ a [ onClick Logout ] [ text "Logout" ] ]
+            ]

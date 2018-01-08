@@ -6,56 +6,58 @@ import Http exposing (..)
 import Navigation
 import Error.Types exposing (..)
 import Error.Rest exposing (..)
-
+import Auth.Types exposing (..)
 
 init : ( Model, Cmd Msg )
 init =
     ( { emailInput = "", nameInput = "", passwordInput = "", passwordConfirmationInput = "", errorMessages = [] }, Cmd.none )
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Msg -> Model -> ( Model, Cmd Msg, Maybe Auth )
 update msg model =
-    case msg of
-        NewEmailInput newEmail ->
-            let
-                updatedModel =
-                    { model | emailInput = newEmail }
-            in
-                ( { updatedModel | errorMessages = validateModel updatedModel }, Cmd.none )
-        NewNameInput newName ->
-            let
-                updatedModel =
-                    { model | nameInput = newName }
-            in
-            ( { updatedModel | errorMessages = validateModel updatedModel }, Cmd.none )
-        NewPasswordInput newPassword ->
-            let
-                updatedModel =
-                    { model | passwordInput = newPassword }
-            in
-                ( { updatedModel | errorMessages = validateModel updatedModel }, Cmd.none )
-        NewPasswordConfirmationInput newPassword ->
-            let
-                updatedModel =
-                    { model | passwordConfirmationInput = newPassword }
-            in
-                ( { updatedModel | errorMessages = validateModel updatedModel }, Cmd.none )
-        SignUpFormSubmit ->
-            let
-                form =
-                    Form model.emailInput model.nameInput model.passwordInput model.passwordConfirmationInput
-            in
-                ( { model | errorMessages = [] }, signUpRequest "https://recipevault-miguelcodemunity.c9users.io/api" form )
-        SignUpRequestResult (Ok auth) ->
-            ( model, Navigation.newUrl "#recipe-search" )
-        SignUpRequestResult (Err error) ->
-            case error of
-                Http.BadStatus response ->
-                    ( { model | errorMessages = [ messageForResponse response ] }, Cmd.none )
-                _ ->
-                    ( { model | errorMessages = [ "Unknown error." ] }, Cmd.none )
-        NavigateToLogin ->
-            ( model, Navigation.newUrl "#login" )
+  case msg of
+    NewEmailInput newEmail ->
+      let
+        updatedModel =
+          { model | emailInput = newEmail }
+      in
+        ( { updatedModel | errorMessages = validateModel updatedModel }, Cmd.none, Nothing )
+    NewNameInput newName ->
+      let
+        updatedModel =
+          { model | nameInput = newName }
+      in
+        ( { updatedModel | errorMessages = validateModel updatedModel }, Cmd.none, Nothing )
+    NewPasswordInput newPassword ->
+      let
+        updatedModel =
+          { model | passwordInput = newPassword }
+      in
+        ( { updatedModel | errorMessages = validateModel updatedModel }, Cmd.none, Nothing )
+    NewPasswordConfirmationInput newPassword ->
+      let
+        updatedModel =
+          { model | passwordConfirmationInput = newPassword }
+      in
+        ( { updatedModel | errorMessages = validateModel updatedModel }, Cmd.none, Nothing )
+    SignUpFormSubmit ->
+      let
+        form =
+          Form model.emailInput model.nameInput model.passwordInput model.passwordConfirmationInput
+        request =
+          signUpRequest "https://recipevault-miguelcodemunity.c9users.io/api" form
+      in
+        ( { model | errorMessages = [] }, request, Nothing )
+    SignUpRequestResult (Ok auth) ->
+        ( model, Navigation.newUrl "#recipe-search", Just auth )
+    SignUpRequestResult (Err error) ->
+      case error of
+        Http.BadStatus response ->
+          ( { model | errorMessages = [ messageForResponse response ] }, Cmd.none, Nothing )
+        _ ->
+          ( { model | errorMessages = [ "Unknown error." ] }, Cmd.none, Nothing )
+    NavigateToLogin ->
+      ( model, Navigation.newUrl "#login", Nothing )
 
 subscriptions : Model -> Sub Msg
 subscriptions = \_ -> Sub.none

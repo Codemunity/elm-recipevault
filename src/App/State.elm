@@ -8,50 +8,58 @@ import SignUp.State
 
 init : Flags -> Location -> ( Model, Cmd Msg )
 init flags location =
-    let
-        initialRoute =
-            parseLocation location
-        ( loginModel, loginCmd ) =
-          Login.State.init
-        ( signUpModel, signUpCmd ) =
-          SignUp.State.init
-        authCmd =
-          case (initialRoute, flags.auth) of
-            (LoginRoute, Just _) ->
-              Navigation.modifyUrl "#recipe-search"
-            (SignUpRoute, Just _) ->
-              Navigation.modifyUrl "#recipe-search"
-            (RecipeSearchRoute, Nothing) ->
-              Navigation.modifyUrl "#login"
-            _ ->
-              Cmd.none
-    in
-        ( { loginModel = loginModel
-          , signUpModel = signUpModel
-          , currentRoute = initialRoute
-          , flags = flags
-          }
-        , Cmd.batch [ Cmd.map LoginMsg loginCmd
-                    , Cmd.map SignUpMsg signUpCmd
-                    , authCmd
-                    ]
-        )
+  let
+    initialRoute =
+        parseLocation location
+    ( loginModel, loginCmd ) =
+      Login.State.init
+    ( signUpModel, signUpCmd ) =
+      SignUp.State.init
+    authCmd =
+      case (initialRoute, flags.auth) of
+        (LoginRoute, Just _) ->
+          Navigation.modifyUrl "#recipe-search"
+        (SignUpRoute, Just _) ->
+          Navigation.modifyUrl "#recipe-search"
+        (RecipeSearchRoute, Nothing) ->
+          Navigation.modifyUrl "#login"
+        _ ->
+          Cmd.none
+  in
+    ( { loginModel = loginModel
+      , signUpModel = signUpModel
+      , currentRoute = initialRoute
+      , flags = flags
+      }
+    , Cmd.batch [ Cmd.map LoginMsg loginCmd
+                , Cmd.map SignUpMsg signUpCmd
+                , authCmd
+                ]
+    )
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   case msg of
     LoginMsg loginMsg ->
       let
-          ( loginModel, loginCmd ) =
-            Login.State.update loginMsg model.loginModel
+        ( loginModel, loginCmd, auth ) =
+          Login.State.update loginMsg model.loginModel
+        oldFlags = 
+          model.flags
+        newFlags =
+          { oldFlags | auth = auth }
       in
-          ( { model | loginModel = loginModel }, Cmd.map LoginMsg loginCmd )
+        ( { model | loginModel = loginModel, flags = newFlags }, Cmd.map LoginMsg loginCmd )
     SignUpMsg signUpMsg ->
       let
-          ( signUpModel, signUpCmd ) =
-            SignUp.State.update signUpMsg model.signUpModel
+        ( signUpModel, signUpCmd, auth ) =
+          SignUp.State.update signUpMsg model.signUpModel
+        oldFlags = 
+          model.flags
+        newFlags =
+          { oldFlags | auth = auth }
       in
-          ( { model | signUpModel = signUpModel }, Cmd.map SignUpMsg signUpCmd )
+        ( { model | signUpModel = signUpModel, flags = newFlags }, Cmd.map SignUpMsg signUpCmd )
     OnLocationChange location ->
       init model.flags location
     Logout ->
