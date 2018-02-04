@@ -7,6 +7,7 @@ import Navigation
 import Error.Types exposing (..)
 import Error.Rest exposing (..)
 import Auth.Types exposing (..)
+import Auth.State as Auth
 
 
 init : ( Model, Cmd Msg )
@@ -29,7 +30,7 @@ update msg model =
       in
         ( { model | errorMessage = Nothing }, request, Nothing )
     LoginRequestResult (Ok auth) ->
-      ( model, Navigation.newUrl "#recipe-search", Just auth )
+      ( model, Cmd.batch [ Auth.set auth, Navigation.newUrl "#recipe-search" ], Just auth )
     LoginRequestResult (Err error) ->
       case error of
         Http.BadStatus response ->

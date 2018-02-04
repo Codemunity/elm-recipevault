@@ -3,18 +3,20 @@ var Elm = require('./RecipeVault.elm')
 
 var root = document.getElementById('root')
 
-var auth = null
-// var auth = {
-//     token: "token-api",
-//     user: { 
-//         email: "email@email.com",
-//         password : "password",
-//         name : "Name"
-//     }
-// }
+var storedState = localStorage.getItem('auth');
+var auth = storedState ? JSON.parse(storedState) : null;
 
 var flags = {
     auth
 }
 
-Elm.RecipeVault.embed(root, flags)
+var elmApp = Elm.RecipeVault.embed(root, flags);
+
+elmApp.ports.setAuth.subscribe(function(state) {
+    localStorage.setItem('auth', JSON.stringify(state));
+});
+
+elmApp.ports.clearAuth.subscribe(function() {
+    localStorage.removeItem('auth');
+    elmApp.ports.authCleared.send(null);
+});

@@ -22,3 +22,4 @@ type Msg
     | SignUpMsg SignUp.Types.Msg
     | OnLocationChange Location
     | Logout
+    | AuthCleared

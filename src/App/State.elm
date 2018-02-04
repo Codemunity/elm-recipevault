@@ -5,6 +5,7 @@ import Routing.Types exposing (..)
 import Navigation exposing (Location)
 import Login.State
 import SignUp.State
+import Auth.State as Auth
 
 init : Flags -> Location -> ( Model, Cmd Msg )
 init flags location =
@@ -63,11 +64,20 @@ update msg model =
     OnLocationChange location ->
       init model.flags location
     Logout ->
-      ( model, Navigation.modifyUrl "#login" )
+      ( model, Auth.clear )
+    AuthCleared ->
+      let
+          oldFlags =
+            model.flags
+          newFlags =
+            { oldFlags | auth = Nothing }
+      in
+        ( { model | flags = newFlags }, Navigation.modifyUrl "#login")
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.batch
     [ Sub.map LoginMsg (Login.State.subscriptions model.loginModel)
     , Sub.map SignUpMsg (SignUp.State.subscriptions model.signUpModel)
+    , Auth.cleared AuthCleared
     ]
