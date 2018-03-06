@@ -7,6 +7,8 @@ import Login.View as Login
 import Login.Types
 import SignUp.View as SignUp
 import SignUp.Types
+import RecipeSearch.View as RecipeSearch
+import RecipeSearch.Types
 import Routing.Types exposing (..)
 
 
@@ -23,15 +25,4 @@ page model =
     SignUpRoute ->
       Html.map SignUpMsg (SignUp.view model.signUpModel)
     RecipeSearchRoute ->
-      case model.flags.auth of
-        Just auth ->
-          div [] 
-            [ div [] [ h1 [] [ text "Recipe Search" ] ]
-            , div [] [ text ( "Welcome " ++ auth.user.name ++ "!" ) ]
-            , div [] [ a [ onClick Logout ] [ text "Logout" ] ]
-            ]
-        Nothing ->
-          div [] 
-            [ div [] [ h1 [] [ text "Recipe Search" ] ]
-            , div [] [ a [ onClick Logout ] [ text "Logout" ] ]
-            ]
+      Html.map RecipeSearchMsg (RecipeSearch.view model.recipeSearchModel)

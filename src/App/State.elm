@@ -5,6 +5,7 @@ import Routing.Types exposing (..)
 import Navigation exposing (Location)
 import Login.State
 import SignUp.State
+import RecipeSearch.State
 import Auth.State as Auth
 
 init : Flags -> Location -> ( Model, Cmd Msg )
@@ -16,6 +17,8 @@ init flags location =
       Login.State.init
     ( signUpModel, signUpCmd ) =
       SignUp.State.init
+    ( recipeSearchModel, recipeSearchCmd ) =
+      RecipeSearch.State.init
     authCmd =
       case (initialRoute, flags.auth) of
         (LoginRoute, Just _) ->
@@ -29,11 +32,13 @@ init flags location =
   in
     ( { loginModel = loginModel
       , signUpModel = signUpModel
+      , recipeSearchModel = recipeSearchModel
       , currentRoute = initialRoute
       , flags = flags
       }
     , Cmd.batch [ Cmd.map LoginMsg loginCmd
                 , Cmd.map SignUpMsg signUpCmd
+                , Cmd.map RecipeSearchMsg recipeSearchCmd
                 , authCmd
                 ]
     )
@@ -61,6 +66,12 @@ update msg model =
           { oldFlags | auth = auth }
       in
         ( { model | signUpModel = signUpModel, flags = newFlags }, Cmd.map SignUpMsg signUpCmd )
+    RecipeSearchMsg recipeSearchMsg ->
+      let
+        ( recipeSearchModel, recipeSearchCmd ) =
+          RecipeSearch.State.update recipeSearchMsg model.recipeSearchModel
+      in
+        ( { model | recipeSearchModel = recipeSearchModel }, Cmd.map RecipeSearchMsg recipeSearchCmd )
     OnLocationChange location ->
       init model.flags location
     Logout ->
@@ -79,5 +90,6 @@ subscriptions model =
   Sub.batch
     [ Sub.map LoginMsg (Login.State.subscriptions model.loginModel)
     , Sub.map SignUpMsg (SignUp.State.subscriptions model.signUpModel)
+    , Sub.map RecipeSearchMsg (RecipeSearch.State.subscriptions model.recipeSearchModel)
     , Auth.cleared AuthCleared
     ]
