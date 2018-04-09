@@ -5,16 +5,40 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import RecipeSearch.Types exposing (..)
 import Maybe
+  
+searchInputStyles : List (String, String ) 
+searchInputStyles =
+  [ ("width", "60%")
+  , ("border-radius", "10px")
+  , ("padding", "10px")
+  , ("font-size", "1.4rem")
+  ]
+  
+selectContainerStyles =
+  [ ("display", "inline-block")
+  , ("width", "30%")
+  , ("padding", "2% 5%")
+  ]
+
+searchButtonStyles =
+  [ ("padding", "15px 45px")
+  , ("font-size", "1.2rem")
+  , ("border", "0")
+  , ("background-color", "MediumPurple")
+  , ("color", "white")
+  , ("border-radius", "10px")
+  , ("cursor", "pointer")
+  ]
 
 view : Model -> Html Msg
 view model =
   div []
     [ div [] [ button [ onClick Logout ] [ text "Logout" ] ]
     , div [ style [ ("color", "red") ] ] [ text (Maybe.withDefault "" model.errorMessage) ]
-    , div [] [ input [ type_ "text", placeholder "What do you fancy?", onInput NewQuery, value model.query ] [] ]
-    , div [] [ multipleSelect OnDietSelected model.chosenDietLabel model.allDietLabels ]
-    , div [] [ multipleSelect OnHealthSelected model.chosenHealthLabel model.allHealthLabels ]
-    , div [] [ button [ onClick SearchRecipes ] [ text "Search!" ] ]
+    , div [] [ input [ style searchInputStyles, type_ "text", placeholder "What do you fancy?", onInput NewQuery, value model.query ] [] ]
+    , div [ style selectContainerStyles ] [ multipleSelect OnDietSelected model.chosenDietLabel model.allDietLabels ]
+    , div [ style selectContainerStyles ] [ multipleSelect OnHealthSelected model.chosenHealthLabel model.allHealthLabels ]
+    , div [] [ button [ style searchButtonStyles, onClick SearchRecipes ] [ text "Search" ] ]
     , hitsView model.hits
     ]
     
@@ -60,8 +84,7 @@ labelsView labels className =
   
 multipleSelect : (String -> Msg) -> Maybe String -> List String -> Html Msg
 multipleSelect msg chosenElement allElements =
-  div []
-    (List.map (singleSelect msg chosenElement) allElements)
+  div [] (List.map (singleSelect msg chosenElement) allElements)
   
 singleSelect : (String -> Msg) -> Maybe String -> String -> Html Msg
 singleSelect msg chosenElement element =
@@ -72,4 +95,11 @@ singleSelect msg chosenElement element =
       else
         "ghostwhite"
   in
-    div [ style [ ("background-color", backgroundColor) ], onClick (msg element) ] [ text element ]
+    div [ style [ ("background-color", backgroundColor)
+                , ("margin", "5px 0")
+                , ("padding", "5px 0")
+                , ("border-radius", "10px")
+                ]
+        , onClick (msg element) 
+        ] 
+        [ text element ]

@@ -7,7 +7,7 @@ import RecipeSearch.Types exposing (..)
 import Recipe.Rest exposing (..)
 
 -- Replace the APP_ID and APP_KEY placeholders with your actual values
-recipeApiUrl = "https://api.edamam.com/search?app_id=APP_ID&app_key=APP_KEY"
+recipeApiUrl = "https://api.edamam.com/search?app_id=0c69de46&app_key=e22efceb245b15e61f0586491d062c58"
 
 searchRecipes : String -> Maybe String -> Maybe String -> Cmd Msg
 searchRecipes query chosenDietLabel chosenHealthLabel =
