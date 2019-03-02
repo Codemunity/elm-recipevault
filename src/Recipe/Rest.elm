@@ -15,3 +15,4 @@ decodeRecipe =
     |> required "ingredientLines" (Json.Decode.list Json.Decode.string)
     |> required "dietLabels" (Json.Decode.list Json.Decode.string)
     |> required "healthLabels" (Json.Decode.list Json.Decode.string)
+    |> required "source" Json.Decode.string

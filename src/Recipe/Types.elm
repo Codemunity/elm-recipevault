@@ -9,4 +9,5 @@ type alias Recipe =
   , ingredients : List String
   , dietLabels: List String
   , healthLabels: List String
+  , source : String
   }

@@ -67,9 +67,10 @@ hitView hit =
       [ div [] [ text recipe.title ]
       , img [ src recipe.image ] []
       , a [ href recipe.url ] []
+      , div [] [ text ("From: " ++ recipe.source) ]
       , div [] [ text (servings ++ " servings.") ]
       , div [] [ text (calories ++ " calories.") ]
-      , div [] 
+      , div []
         [ div [] [ text "Ingredients:" ]
         , ul [] ( List.map (\i -> li [] [ text i ] ) recipe.ingredients )
         ]
