@@ -5,6 +5,7 @@ import Html exposing (..)
 import Login.View as Login
 import SignUp.View as SignUp
 import RecipeSearch.View as RecipeSearch
+import FavoriteRecipe.View as FavoriteRecipe
 import Routing.Types exposing (..)
 
 
@@ -22,3 +23,5 @@ page model =
       Html.map SignUpMsg (SignUp.view model.signUpModel)
     RecipeSearchRoute ->
       Html.map RecipeSearchMsg (RecipeSearch.view model.recipeSearchModel)
+    FavoriteRecipeRoute ->
+      Html.map FavoriteRecipeMsg (FavoriteRecipe.view model.favoriteRecipeModel)

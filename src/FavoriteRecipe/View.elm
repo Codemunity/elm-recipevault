@@ -1,4 +1,4 @@
-module RecipeSearch.View exposing (view)
+module FavoriteRecipe.View exposing (view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -19,16 +19,16 @@ deleteButtonStyles =
 view : Model -> Html Msg
 view model =
   div []
-    , div [ style [ ("color", "red") ] ] [ text (Maybe.withDefault "" model.errorMessage) ]
+    [ div [ style [ ("color", "red") ] ] [ text (Maybe.withDefault "" model.errorMessage) ]
     , favoriteRecipesView model.favoriteRecipes
     ]
 
 favoriteRecipesView : Maybe (List FavoriteRecipe) -> Html Msg
 favoriteRecipesView maybeFavoriteRecipes =
-  case maybeHits of
+  case maybeFavoriteRecipes of
     Just favoriteRecipes ->
       div []
-        [ text ("You've got " ++ (toString favoriteRecipes.count) ++ " favorite recipes.")
+        [ text ("You've got " ++ (favoriteRecipes |> List.length |> toString) ++ " favorite recipes.")
         , div [] (List.map favoriteRecipeView favoriteRecipes)
         ]
     Nothing ->

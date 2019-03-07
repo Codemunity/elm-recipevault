@@ -7,6 +7,7 @@ type Route
   = LoginRoute
   | SignUpRoute
   | RecipeSearchRoute
+  | FavoriteRecipeRoute
 
 
 matchers : Parser (Route -> a) a
@@ -15,6 +16,7 @@ matchers =
         [ map LoginRoute (s "login")
         , map SignUpRoute (s "signup")
         , map RecipeSearchRoute (s "recipe-search")
+        , map FavoriteRecipeRoute (s "favorite-recipes")
         ]
 
 parseLocation : Location -> Route

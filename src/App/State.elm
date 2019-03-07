@@ -6,6 +6,7 @@ import Navigation exposing (Location)
 import Login.State
 import SignUp.State
 import RecipeSearch.State
+import FavoriteRecipe.State
 import Auth.State as Auth
 
 init : Flags -> Location -> ( Model, Cmd Msg )
@@ -19,6 +20,8 @@ init flags location =
       SignUp.State.init
     ( recipeSearchModel, recipeSearchCmd ) =
       RecipeSearch.State.init
+    ( favoriteRecipeModel, favoriteRecipeCmd ) =
+      FavoriteRecipe.State.init
     authCmd =
       case (initialRoute, flags.auth) of
         (LoginRoute, Just _) ->
@@ -27,18 +30,22 @@ init flags location =
           Navigation.modifyUrl "#recipe-search"
         (RecipeSearchRoute, Nothing) ->
           Navigation.modifyUrl "#login"
+        (FavoriteRecipeRoute, Nothing) ->
+          Navigation.modifyUrl "#login"
         _ ->
           Cmd.none
   in
     ( { loginModel = loginModel
       , signUpModel = signUpModel
       , recipeSearchModel = recipeSearchModel
+      , favoriteRecipeModel = favoriteRecipeModel
       , currentRoute = initialRoute
       , flags = flags
       }
     , Cmd.batch [ Cmd.map LoginMsg loginCmd
                 , Cmd.map SignUpMsg signUpCmd
                 , Cmd.map RecipeSearchMsg recipeSearchCmd
+                , Cmd.map FavoriteRecipeMsg favoriteRecipeCmd
                 , authCmd
                 ]
     )
@@ -76,6 +83,16 @@ update msg model =
             ( { model | recipeSearchModel = recipeSearchModel }, Cmd.map RecipeSearchMsg recipeSearchCmd )
         Nothing ->
           ( model, Navigation.modifyUrl "#login" )
+    FavoriteRecipeMsg favoriteRecipeMsg ->
+      case model.flags.auth of
+        Just auth ->
+          let
+            ( favoriteRecipeModel, favoriteRecipeCmd ) =
+              FavoriteRecipe.State.update auth favoriteRecipeMsg model.favoriteRecipeModel
+          in
+            ( { model | favoriteRecipeModel = favoriteRecipeModel }, Cmd.map FavoriteRecipeMsg favoriteRecipeCmd )
+        Nothing ->
+          ( model, Navigation.modifyUrl "#login" )
     OnLocationChange location ->
       init model.flags location
     Logout ->
@@ -95,5 +112,6 @@ subscriptions model =
     [ Sub.map LoginMsg (Login.State.subscriptions model.loginModel)
     , Sub.map SignUpMsg (SignUp.State.subscriptions model.signUpModel)
     , Sub.map RecipeSearchMsg (RecipeSearch.State.subscriptions model.recipeSearchModel)
+    , Sub.map FavoriteRecipeMsg (FavoriteRecipe.State.subscriptions model.favoriteRecipeModel)
     , Auth.cleared AuthCleared
     ]
