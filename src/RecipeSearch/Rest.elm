@@ -7,6 +7,7 @@ import RecipeSearch.Types exposing (..)
 import Recipe.Rest exposing (..)
 import FavoriteRecipe.Types exposing (FavoriteRecipe)
 import FavoriteRecipe.Rest exposing (..)
+import Auth.Types exposing (..)
 
 -- Replace the APP_ID and APP_KEY placeholders with your actual values
 recipeApiUrl = "https://api.edamam.com/search?app_id=0c69de46&app_key=e22efceb245b15e61f0586491d062c58"
@@ -67,7 +68,7 @@ createFavoriteRecipe baseApiUrl auth recipe =
       request =
         Http.request
           { method = "POST"
-          , headers = [ ("Authorization", auth.token) ]
+          , headers = [ Http.header "Authorization" auth.token ]
           , url = requestUrl
           , body = requestBody
           , expect = Http.expectJson decodeFavoriteRecipe
@@ -75,4 +76,4 @@ createFavoriteRecipe baseApiUrl auth recipe =
           , withCredentials = False
           }
   in
-      Http.send CreateF request
+      Http.send CreateFavoriteRecipeResult request

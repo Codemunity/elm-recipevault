@@ -15,7 +15,7 @@ getFavoriteRecipes baseApiUrl auth =
     request =
       Http.request
         { method = "GET"
-        , headers = [ ("Authorization", auth.token) ]
+        , headers = [ Http.header "Authorization" auth.token ]
         , url = requestUrl
         , body = Http.emptyBody
         , expect = Http.expectJson (Json.Decode.list decodeFavoriteRecipe)
@@ -23,7 +23,7 @@ getFavoriteRecipes baseApiUrl auth =
         , withCredentials = False
         }
   in
-    Http.send GetFavoriteRecipes request
+    Http.send GetFavoriteRecipesResult request
 
 deleteFavoriteRecipe : String -> Auth -> FavoriteRecipe -> Cmd Msg
 deleteFavoriteRecipe baseApiUrl auth recipe =
@@ -45,7 +45,7 @@ deleteFavoriteRecipe baseApiUrl auth recipe =
         , withCredentials = False
         }
   in
-      Http.send DeleteFavoriteRecipe request
+      Http.send DeleteFavoriteRecipeResult request
 
 decodeFavoriteRecipe : Json.Decode.Decoder FavoriteRecipe
 decodeFavoriteRecipe =

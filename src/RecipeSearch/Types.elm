@@ -2,6 +2,8 @@ module RecipeSearch.Types exposing (..)
 
 import Http
 import Recipe.Types exposing (..)
+import FavoriteRecipe.Types exposing (..)
+import Auth.Types exposing (..)
 
 type alias Model =
   { query : String
@@ -30,3 +32,5 @@ type Msg
   | SearchRecipes
   | SearchRecipesResult (Result Http.Error Hits)
   | Logout
+  | CreateFavoriteRecipe Recipe
+  | CreateFavoriteRecipeResult (Result Http.Error FavoriteRecipe)

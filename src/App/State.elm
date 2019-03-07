@@ -67,11 +67,15 @@ update msg model =
       in
         ( { model | signUpModel = signUpModel, flags = newFlags }, Cmd.map SignUpMsg signUpCmd )
     RecipeSearchMsg recipeSearchMsg ->
-      let
-        ( recipeSearchModel, recipeSearchCmd ) =
-          RecipeSearch.State.update recipeSearchMsg model.recipeSearchModel
-      in
-        ( { model | recipeSearchModel = recipeSearchModel }, Cmd.map RecipeSearchMsg recipeSearchCmd )
+      case model.flags.auth of
+        Just auth ->
+          let
+            ( recipeSearchModel, recipeSearchCmd ) =
+              RecipeSearch.State.update auth recipeSearchMsg model.recipeSearchModel
+          in
+            ( { model | recipeSearchModel = recipeSearchModel }, Cmd.map RecipeSearchMsg recipeSearchCmd )
+        Nothing ->
+          ( model, Navigation.modifyUrl "#login" )
     OnLocationChange location ->
       init model.flags location
     Logout ->

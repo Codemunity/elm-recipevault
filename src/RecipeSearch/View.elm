@@ -29,6 +29,16 @@ searchButtonStyles =
   , ("border-radius", "10px")
   , ("cursor", "pointer")
   ]
+  
+favoriteButtonStyles =
+  [ ("padding", "15px 45px")
+  , ("font-size", "1.2rem")
+  , ("border", "0")
+  , ("background-color", "Salmon")
+  , ("color", "white")
+  , ("border-radius", "10px")
+  , ("cursor", "pointer")
+  ]
 
 view : Model -> Html Msg
 view model =
@@ -76,6 +86,7 @@ hitView hit =
         ]
       , labelsView recipe.dietLabels "diet-labels"
       , labelsView recipe.healthLabels "health-labels"
+      , div [] [ button [ style favoriteButtonStyles, onClick (CreateFavoriteRecipe recipe) ] [ text "Favorite!" ] ]
       ]
 
 labelsView : List String -> String -> Html Msg

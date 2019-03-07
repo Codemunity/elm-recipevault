@@ -2,13 +2,9 @@ module App.View exposing (..)
 
 import App.Types exposing (..)
 import Html exposing (..)
-import Html.Events exposing (..)
 import Login.View as Login
-import Login.Types
 import SignUp.View as SignUp
-import SignUp.Types
 import RecipeSearch.View as RecipeSearch
-import RecipeSearch.Types
 import Routing.Types exposing (..)
 
 
