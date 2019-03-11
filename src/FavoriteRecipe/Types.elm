@@ -1,9 +1,11 @@
 module FavoriteRecipe.Types exposing (..)
 
 import Http
+import Auth.Types exposing (..)
 
 type alias Model =
-  { favoriteRecipes : Maybe (List FavoriteRecipe)
+  { auth: Maybe Auth
+  , favoriteRecipes : Maybe (List FavoriteRecipe)
   , errorMessage : Maybe String
   }
   
@@ -16,7 +18,6 @@ type alias FavoriteRecipe =
   }
   
 type Msg
-  = GetFavoriteRecipes
-  | GetFavoriteRecipesResult (Result Http.Error (List FavoriteRecipe))
+  = GetFavoriteRecipesResult (Result Http.Error (List FavoriteRecipe))
   | DeleteFavoriteRecipe FavoriteRecipe
   | DeleteFavoriteRecipeResult (Result Http.Error String)

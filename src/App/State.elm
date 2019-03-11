@@ -21,7 +21,7 @@ init flags location =
     ( recipeSearchModel, recipeSearchCmd ) =
       RecipeSearch.State.init
     ( favoriteRecipeModel, favoriteRecipeCmd ) =
-      FavoriteRecipe.State.init
+      FavoriteRecipe.State.init flags.auth
     authCmd =
       case (initialRoute, flags.auth) of
         (LoginRoute, Just _) ->
@@ -84,15 +84,11 @@ update msg model =
         Nothing ->
           ( model, Navigation.modifyUrl "#login" )
     FavoriteRecipeMsg favoriteRecipeMsg ->
-      case model.flags.auth of
-        Just auth ->
-          let
-            ( favoriteRecipeModel, favoriteRecipeCmd ) =
-              FavoriteRecipe.State.update auth favoriteRecipeMsg model.favoriteRecipeModel
-          in
-            ( { model | favoriteRecipeModel = favoriteRecipeModel }, Cmd.map FavoriteRecipeMsg favoriteRecipeCmd )
-        Nothing ->
-          ( model, Navigation.modifyUrl "#login" )
+      let
+        ( favoriteRecipeModel, favoriteRecipeCmd ) =
+          FavoriteRecipe.State.update favoriteRecipeMsg model.favoriteRecipeModel
+      in
+        ( { model | favoriteRecipeModel = favoriteRecipeModel }, Cmd.map FavoriteRecipeMsg favoriteRecipeCmd )
     OnLocationChange location ->
       init model.flags location
     Logout ->

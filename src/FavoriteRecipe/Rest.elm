@@ -6,7 +6,7 @@ import Json.Decode
 import Auth.Types exposing (..)
 import Json.Decode.Pipeline exposing (..)
 import FavoriteRecipe.Types exposing (..)
-      
+
 getFavoriteRecipes : String -> Auth -> Cmd Msg
 getFavoriteRecipes baseApiUrl auth =
   let
